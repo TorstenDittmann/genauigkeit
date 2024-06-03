@@ -1,0 +1,17 @@
+{
+  "name": "genauigkeit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "pnpm -r --stream start:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.1.4",
+  "devDependencies": {
+    "publint": "^0.2.8"
+  }
+}
