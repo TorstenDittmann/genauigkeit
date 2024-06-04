@@ -10,7 +10,6 @@ import { get_stories } from "./storybook.js";
 export async function generate() {
     const config = await load_config();
     const used_browsers = get_browsers(config);
-    console.log(config.browsers, used_browsers);
     const used_devices = get_devices(config);
     const stories = await get_stories(`http://localhost:${config.port}`);
 
