@@ -23,7 +23,6 @@
         "consola": "^3.2.3",
         "dockerode": "^4.0.2",
         "fs-extra": "^11.2.0",
-        "genauigkeit": "^0.0.1",
         "jimp": "^0.22.12",
         "looks-same": "^9.0.0",
         "p-queue": "^8.0.1",
