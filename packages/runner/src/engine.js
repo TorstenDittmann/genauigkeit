@@ -18,6 +18,7 @@ export async function run_generate() {
         get_stories(`http://localhost:${config.port}`),
         connect_to_browser("chromium"),
     ]);
+
     let progress = 0;
     const queue = new PQueue({ concurrency: cpus_count });
     queue.addListener("completed", (story) => {
