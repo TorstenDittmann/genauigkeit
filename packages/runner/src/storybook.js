@@ -1,3 +1,4 @@
+import { consola } from "consola";
 /**
  * @typedef {Object} Story
  * @property {string} type
@@ -13,7 +14,8 @@
  * @returns {Promise<Story[]>}
  */
 export async function get_stories(url_root) {
-    const response = await fetch(url_root + "/index.json");
+    consola.start("Fetching stories...");
+    const response = await fetch(`${url_root}/index.json`);
     const metadata = await response.json();
 
     const stories = Object.values(metadata.entries).reduce((acc, entry) => {
@@ -23,6 +25,6 @@ export async function get_stories(url_root) {
 
         return acc;
     }, []);
-
+    consola.ready(`Fetched ${stories.length} stories!`);
     return stories;
 }

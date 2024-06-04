@@ -1,25 +1,40 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
-    "name": "runner",
+    "name": "genauigkeit",
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start:dev": "node --watch index.js test"
+        "start:dev": "node --watch index.js test",
+        "format": "pnpm biome check --apply .",
+        "lint": "pnpm biome lint ."
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
         "@clerc/plugin-help": "^0.44.0",
+        "@clerc/plugin-not-found": "^0.44.0",
         "@clerc/plugin-version": "^0.44.0",
+        "c12": "^1.10.0",
         "clerc": "^0.44.0",
+        "consola": "^3.2.3",
+        "dockerode": "^4.0.2",
         "fs-extra": "^11.2.0",
+        "genauigkeit": "^0.0.1",
         "jimp": "^0.22.12",
         "looks-same": "^9.0.0",
+        "p-queue": "^8.0.1",
         "pixelmatch": "^5.3.0",
-        "playwright": "^1.44.1"
+        "playwright": "^1.44.1",
+        "yargs": "^17.7.2"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.7.3"
+    },
+    "bin": {
+        "genauigkeit": "./bin/genauigkeit"
     }
 }
