@@ -2,13 +2,16 @@ import { cpus } from "node:os";
 import { consola } from "consola";
 import { emptyDirSync } from "fs-extra";
 import PQueue from "p-queue";
-import { load_config } from "./config.js";
+import { get_browsers, get_devices, load_config } from "./config.js";
 import { BROWSERS, DEVICES } from "./constants.js";
 import { connect_to_browser, run_generate, run_tests } from "./engine.js";
 import { get_stories } from "./storybook.js";
 
 export async function generate() {
     const config = await load_config();
+    const used_browsers = get_browsers(config);
+    console.log(config.browsers, used_browsers);
+    const used_devices = get_devices(config);
     const stories = await get_stories(`http://localhost:${config.port}`);
 
     let progress = 0;
@@ -19,22 +22,21 @@ export async function generate() {
     queue.addListener("completed", ({ story, device, target_browser }) => {
         const progress_current = ++progress;
         const progress_text = `[${progress_current}/${
-            stories.length * DEVICES.length * BROWSERS.length
+            stories.length * used_devices.length * used_browsers.length
         }]`;
         consola.success(
             `${progress_text} ${story.id} (${target_browser} ${device})`,
         );
     });
 
-    for (const target_browser of BROWSERS) {
+    for (const target_browser of used_browsers) {
         const browser = await connect_to_browser(target_browser);
-
         emptyDirSync(`${config.directory}/current/${target_browser}`);
         emptyDirSync(`${config.directory}/diffs/${target_browser}`);
         emptyDirSync(`${config.directory}/references/${target_browser}`);
 
-        for (const story of stories) {
-            for (const device of DEVICES) {
+        for (const device of used_devices) {
+            for (const story of stories) {
                 queue.add(async () => {
                     await run_generate(
                         story,
@@ -47,15 +49,18 @@ export async function generate() {
                 });
             }
         }
+        await new Promise((resolve, reject) =>
+            queue.onIdle().then(resolve).catch(reject),
+        );
+        await browser.close();
     }
-
-    await new Promise((resolve, reject) =>
-        queue.onIdle().then(resolve).catch(reject),
-    );
 }
 
 export async function test() {
     const config = await load_config();
+    const used_browsers = get_browsers(config);
+    console.log(config.browsers, used_browsers);
+    const used_devices = get_devices(config);
     const stories = await get_stories(`http://localhost:${config.port}`);
     const concurrency =
         config.concurrency === "auto" ? cpus().length : config.concurrency;
@@ -66,12 +71,12 @@ export async function test() {
     queue.addListener("error", (e) => console.error(e));
     queue.addListener(
         "completed",
-        ({ diff, story, device, target_browser }) => {
+        ({ equal, story, device, target_browser }) => {
             const progress_current = ++progress;
             const progress_text = `[${progress_current}/${
-                stories.length * DEVICES.length * BROWSERS.length
+                stories.length * used_devices.length * used_browsers.length
             }]`;
-            if (!diff.equal) {
+            if (!equal) {
                 consola.fail(
                     `${progress_text} diff found for ${story.id} (${target_browser} ${device})`,
                 );
@@ -80,16 +85,16 @@ export async function test() {
                     `${progress_text} ${story.id} (${target_browser} ${device})`,
                 );
             }
-            results.push({ story, diff, device, target_browser });
+            results.push({ story, equal, device, target_browser });
         },
     );
 
-    for (const target_browser of BROWSERS) {
+    for (const target_browser of used_browsers) {
         emptyDirSync(`${config.directory}/current/${target_browser}`);
         emptyDirSync(`${config.directory}/diffs/${target_browser}`);
         const browser = await connect_to_browser(target_browser);
         for (const story of stories) {
-            for (const device of DEVICES) {
+            for (const device of used_devices) {
                 queue.add(
                     async () =>
                         await run_tests(
@@ -102,15 +107,16 @@ export async function test() {
                 );
             }
         }
+
+        await new Promise((resolve, reject) =>
+            queue.onIdle().then(resolve).catch(reject),
+        );
+        await browser.close();
     }
 
-    /** @type {{story: Story, diff: looksSame.LooksSameWithExistingDiffResult}[]} */
-    await new Promise((resolve, reject) =>
-        queue.onIdle().then(resolve).catch(reject),
-    );
-
-    const total_tests = stories.length * DEVICES.length * BROWSERS.length;
-    const failed_tests = results.filter(({ diff }) => !diff.equal).length;
+    const total_tests =
+        stories.length * used_devices.length * used_browsers.length;
+    const failed_tests = results.filter(({ equal }) => !equal).length;
     const passed_tests = total_tests - failed_tests;
 
     let summary = `Tests ${failed_tests > 0 ? "failed" : "succeeded"}!\n`;

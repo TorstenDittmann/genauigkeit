@@ -2,6 +2,7 @@ import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { consola } from "consola";
 import { ensureDirSync } from "fs-extra";
+import { config_defaults } from "./config.js";
 
 const GIT_IGNORE = `current/
 diffs/`;
@@ -26,7 +27,7 @@ export async function init_config() {
     const config_path = path.join("./genauigkeit.json");
     await writeFile(
         config_path,
-        JSON.stringify({ port, directory }, undefined, 4),
+        JSON.stringify({ ...config_defaults, port, directory }, undefined, 4),
         {
             encoding: "utf-8",
         },

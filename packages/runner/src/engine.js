@@ -55,7 +55,7 @@ export async function run_tests(
         );
     }
 
-    return { story, diff, device, target_browser };
+    return { story, equal: diff.equal, device, target_browser };
 }
 
 /**

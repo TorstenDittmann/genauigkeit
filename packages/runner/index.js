@@ -1,6 +1,5 @@
 import { consola } from "consola";
 import yargs from "yargs";
-import { run_tests } from "./src/engine.js";
 import { generate, test } from "./src/entrypoints.js";
 import { init_config } from "./src/init.js";
 import { start_server, stop_server } from "./src/server.js";

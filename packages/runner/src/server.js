@@ -1,5 +1,7 @@
 import { consola } from "consola";
 import Docker from "dockerode";
+
+let container_id = null;
 /**
  * Start a Playwright server in a Docker container
  * @returns {Promise<Docker.Container>}
@@ -40,7 +42,15 @@ export async function start_server() {
 
     consola.success("server started!");
 
+    container_id = container.id;
+
     return container;
+}
+
+export async function restart_server() {
+    const docker = new Docker();
+    const container = docker.getContainer(container_id);
+    await container.restart();
 }
 
 export async function stop_server() {
