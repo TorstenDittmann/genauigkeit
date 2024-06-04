@@ -1,4 +1,5 @@
 {
     "port": 6006,
-    "directory": "./.genauigkeit"
+    "directory": "./.genauigkeit",
+    "concurrency": 2
 }

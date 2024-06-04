@@ -18,6 +18,7 @@ const config_defaults = {
 export async function load_config() {
     const { config } = await loadConfig({
         name: "genauigkeit",
+        configFile: "genauigkeit",
         defaultConfig: config_defaults,
     });
 
