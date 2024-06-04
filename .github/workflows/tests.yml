@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  tests:
+  lint:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
