@@ -97,6 +97,9 @@ importers:
       '@biomejs/biome':
         specifier: 1.7.3
         version: 1.7.3
+      publint:
+        specifier: ^0.2.8
+        version: 0.2.8
 
 packages:
 

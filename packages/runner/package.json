@@ -1,17 +1,29 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "name": "genauigkeit",
-    "version": "0.0.9",
+    "version": "0.0.10",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TorstenDittmann/genauigkeit"
+    },
     "description": "Visual Regression Testing for Storybook",
-    "main": "index.js",
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "node --watch index.js test",
         "format": "biome check --apply .",
-        "lint": "biome lint ."
+        "lint": "publint . && biome lint ."
     },
-    "keywords": ["storybook", "screenshot", "visual", "regression", "testing"],
+    "exports": {
+        ".": "./index.js"
+    },
+    "keywords": [
+        "storybook",
+        "screenshot",
+        "visual",
+        "regression",
+        "testing"
+    ],
     "author": "Torsten Dittmann",
     "license": "ISC",
     "dependencies": {
@@ -31,7 +43,8 @@
         "yargs": "^17.7.2"
     },
     "devDependencies": {
-        "@biomejs/biome": "1.7.3"
+        "@biomejs/biome": "1.7.3",
+        "publint": "^0.2.8"
     },
     "bin": {
         "genauigkeit": "./bin/genauigkeit"
