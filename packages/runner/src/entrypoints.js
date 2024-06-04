@@ -13,7 +13,7 @@ export async function generate() {
     let progress = 0;
     const queue = new PQueue({ concurrency: CPU_COUNT });
     queue.addListener("error", (e) => console.error(e));
-    queue.addListener("completed", ({ story, device }) => {
+    queue.addListener("completed", ({ story, device, target_browser }) => {
         const progress_current = ++progress;
         const progress_text = `[${progress_current}/${
             stories.length * DEVICES.length * BROWSERS.length
@@ -38,7 +38,7 @@ export async function generate() {
                         device,
                         target_browser,
                     );
-                    return { story, device };
+                    return { story, device, target_browser };
                 });
             }
         }
