@@ -111,14 +111,15 @@ export async function run_tests() {
     );
 
     await browser.close();
+    const total_tests = stories.length * devices.length;
     const failed_tests = results.filter(({ diff }) => !diff.equal).length;
-    const passed_tests = stories.length - failed_tests;
+    const passed_tests = total_tests - failed_tests;
 
     consola.box(
         `Tests ${
             failed_tests > 0 ? "failed" : "succesful"
         }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${
-            stories.length
+            total_tests
         }`,
     );
 }
