@@ -11,8 +11,9 @@ cli.scriptName("genauigkeit").alias("-h", "--help").alias("-v", "--version");
 cli.command("test", "Run tests.", async () => {
     await start_server();
     consola.info("Running tests...");
-    await run_tests();
+    const successful = await run_tests();
     await stop_server();
+    process.exit(successful ? 0 : 1);
 });
 
 cli.command("generate", "Generate references", async () => {

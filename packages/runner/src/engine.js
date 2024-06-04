@@ -11,6 +11,9 @@ import { get_stories } from "./storybook.js";
 const cpus_count = cpus().length;
 const devices = ["mobile", "desktop"];
 
+/**
+ * @returns {Promise<void>}
+ */
 export async function run_generate() {
     const config = await load_config();
     emptyDirSync(`${config.directory}/current`);
@@ -50,6 +53,9 @@ export async function run_generate() {
     );
 }
 
+/**
+ * @returns {Promise<boolean>}
+ */
 export async function run_tests() {
     const config = await load_config();
     emptyDirSync(`${config.directory}/current`);
@@ -121,7 +127,7 @@ export async function run_tests() {
         }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${total_tests}`,
     );
 
-    process.exit(failed_tests > 0 ? 1 : 0);
+    return failed_tests > 0;
 }
 
 /**
