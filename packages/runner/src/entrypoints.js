@@ -18,7 +18,7 @@ export async function generate() {
         const progress_text = `[${progress_current}/${
             stories.length * DEVICES.length * BROWSERS.length
         }]`;
-        consola.success(`${progress_text} ${story.id} (${device})`);
+        consola.success(`${progress_text} ${story.id} (${target_browser} ${device})`);
     });
 
     for (const target_browser of BROWSERS) {
