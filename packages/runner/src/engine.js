@@ -9,11 +9,13 @@ import { load_config } from "./config.js";
 import { get_stories } from "./storybook.js";
 
 const cpus_count = cpus().length;
+const devices = ["mobile", "desktop"];
 
 export async function run_generate() {
     const config = await load_config();
     emptyDirSync(`${config.directory}/current`);
     emptyDirSync(`${config.directory}/diffs`);
+    emptyDirSync(`${config.directory}/references`);
     const [stories, browser] = await Promise.all([
         get_stories(`http://localhost:${config.port}`),
         connect_to_browser("chromium"),
@@ -21,19 +23,26 @@ export async function run_generate() {
 
     let progress = 0;
     const queue = new PQueue({ concurrency: cpus_count });
-    queue.addListener("completed", (story) => {
+    queue.addListener("completed", ({ story, device }) => {
         const progress_current = ++progress;
-        const progress_text = `[${progress_current}/${stories.length}]`;
-        consola.success(`${progress_text} ${story.id}`);
+        const progress_text = `[${progress_current}/${
+            stories.length * devices.length
+        }]`;
+        consola.success(`${progress_text} ${story.id} (${device})`);
     });
     for (const story of stories) {
-        queue.add(async () => {
-            await create_reference(story, browser, config).then((image) =>
-                image.write(`${config.directory}/references/${story.id}.png`),
-            );
+        for (const device of devices) {
+            queue.add(async () => {
+                await create_reference(story, browser, config, device).then(
+                    (image) =>
+                        image.write(
+                            `${config.directory}/references/${story.id}-${device}.png`,
+                        ),
+                );
 
-            return story;
-        });
+                return { story, device };
+            });
+        }
     }
 
     await new Promise((resolve, reject) =>
@@ -54,35 +63,46 @@ export async function run_tests() {
     const results = [];
     const queue = new PQueue({ concurrency: cpus_count });
 
-    queue.addListener("completed", ({ diff, story }) => {
+    queue.addListener("completed", ({ diff, story, device }) => {
         const progress_current = ++progress;
-        const progress_text = `[${progress_current}/${stories.length}]`;
+        const progress_text = `[${progress_current}/${
+            stories.length * devices.length
+        }]`;
         if (!diff.equal) {
             consola.fail(`${progress_text} diff found for ${story.id}`);
         } else {
-            consola.success(`${progress_text} ${story.id}`);
+            consola.success(`${progress_text} ${story.id} (${device})`);
         }
-        results.push({ story, diff });
+        results.push({ story, diff, device });
     });
 
     for (const story of stories) {
-        queue.add(async () => {
-            const ref = await create_reference(story, browser, config);
-            await ref.writeAsync(`${config.directory}/current/${story.id}.png`);
-
-            const diff = await looksSame(
-                `${config.directory}/references/${story.id}.png`,
-                `${config.directory}/current/${story.id}.png`,
-                { strict: true, createDiffImage: true },
-            );
-            if (!diff.equal) {
-                diff.diffImage.save(
-                    `${config.directory}/diffs/${story.id}.png`,
+        for (const device of ["mobile", "desktop"]) {
+            queue.add(async () => {
+                const ref = await create_reference(
+                    story,
+                    browser,
+                    config,
+                    device,
                 );
-            }
+                await ref.writeAsync(
+                    `${config.directory}/current/${story.id}-${device}.png`,
+                );
 
-            return { story, diff };
-        });
+                const diff = await looksSame(
+                    `${config.directory}/references/${story.id}-${device}.png`,
+                    `${config.directory}/current/${story.id}-${device}.png`,
+                    { strict: true, createDiffImage: true },
+                );
+                if (!diff.equal) {
+                    diff.diffImage.save(
+                        `${config.directory}/diffs/${story.id}-${device}.png`,
+                    );
+                }
+
+                return { story, diff, device };
+            });
+        }
     }
 
     /** @type {{story: Story, diff: looksSame.LooksSameWithExistingDiffResult}[]} */
@@ -135,10 +155,21 @@ export async function connect_to_browser(
  * Take a screenshot of the story
  * @param {import('./storybook').Story} story
  * @param {import('playwright').Browser} browser
+ * @param {import('./config').Config} config
+ * @param {"mobile"|"desktop"} device
  * @returns {Promise<import('jimp')>}
  */
-export async function create_reference(story, browser, config) {
-    const page = await browser.newPage();
+export async function create_reference(story, browser, config, device) {
+    const page = await browser.newPage(
+        device === "mobile"
+            ? {
+                  deviceScaleFactor: 2,
+                  viewport: { width: 360, height: 800 },
+              }
+            : {
+                  viewport: { width: 1920, height: 1080 },
+              },
+    );
     const url = new URL(`http://genauigkeit-host:${config.port}/iframe.html`);
     url.searchParams.set("id", story.id);
     url.searchParams.set("viewMode", "story");
