@@ -15,7 +15,7 @@ export async function run_generate() {
     emptyDirSync(`${config.directory}/current`);
     emptyDirSync(`${config.directory}/diffs`);
     const [stories, browser] = await Promise.all([
-        get_stories(config.storybookRoot),
+        get_stories(`http://localhost:${config.storybookPort}`),
         connect_to_browser("chromium"),
     ]);
     let progress = 0;
@@ -134,9 +134,9 @@ export async function connect_to_browser(
  * @param {import('playwright').Browser} browser
  * @returns {Promise<import('jimp')>}
  */
-export async function create_reference(story, browser) {
+export async function create_reference(story, browser, config) {
     const page = await browser.newPage();
-    const url = new URL("http://proxy-host:6006/iframe.html");
+    const url = new URL(`http://proxy-host:${port}/iframe.html`);
     url.searchParams.set("id", story.id);
     url.searchParams.set("viewMode", "story");
     await page.goto(url.toString());

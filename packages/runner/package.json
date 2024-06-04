@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/package.json",
     "name": "genauigkeit",
     "version": "0.0.3",
-    "description": "",
+    "description": "Visual Regression Testing for Storybook",
     "main": "index.js",
     "type": "module",
     "scripts": {
@@ -11,8 +11,8 @@
         "format": "biome check --apply .",
         "lint": "biome lint ."
     },
-    "keywords": [],
-    "author": "",
+    "keywords": ["storybook", "screenshot", "visual", "regression", "testing"],
+    "author": "Torsten Dittmann",
     "license": "ISC",
     "dependencies": {
         "@clerc/plugin-help": "^0.44.0",
