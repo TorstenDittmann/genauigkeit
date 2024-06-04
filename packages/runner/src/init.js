@@ -1,6 +1,7 @@
 import { writeFile } from "node:fs/promises";
-import { consola } from "consola";
 import path from "node:path";
+import { consola } from "consola";
+import { ensureDirSync } from "fs-extra";
 
 const GIT_IGNORE = `current/
 diffs/`;
@@ -33,6 +34,11 @@ export async function init_config() {
     consola.success(`${config_path} created.`);
 
     const gi_path = path.join(directory, ".gitignore");
+
+    ensureDirSync(directory);
+    ensureDirSync(path.join(directory, "current"));
+    ensureDirSync(path.join(directory, "diffs"));
+    ensureDirSync(path.join(directory, "references"));
     await writeFile(gi_path, GIT_IGNORE);
     consola.success(`${gi_path} created.`);
 
