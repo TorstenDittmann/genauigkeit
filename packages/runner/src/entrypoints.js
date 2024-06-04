@@ -1,8 +1,9 @@
+import { cpus } from "node:os";
 import { consola } from "consola";
 import { emptyDirSync } from "fs-extra";
 import PQueue from "p-queue";
 import { load_config } from "./config.js";
-import { BROWSERS, CPU_COUNT, DEVICES } from "./constants.js";
+import { BROWSERS, DEVICES } from "./constants.js";
 import { connect_to_browser, run_generate, run_tests } from "./engine.js";
 import { get_stories } from "./storybook.js";
 
@@ -11,14 +12,18 @@ export async function generate() {
     const stories = await get_stories(`http://localhost:${config.port}`);
 
     let progress = 0;
-    const queue = new PQueue({ concurrency: CPU_COUNT });
+    const concurrency =
+        config.concurrency === "auto" ? cpus().length : config.concurrency;
+    const queue = new PQueue({ concurrency });
     queue.addListener("error", (e) => console.error(e));
     queue.addListener("completed", ({ story, device, target_browser }) => {
         const progress_current = ++progress;
         const progress_text = `[${progress_current}/${
             stories.length * DEVICES.length * BROWSERS.length
         }]`;
-        consola.success(`${progress_text} ${story.id} (${target_browser} ${device})`);
+        consola.success(
+            `${progress_text} ${story.id} (${target_browser} ${device})`,
+        );
     });
 
     for (const target_browser of BROWSERS) {
@@ -52,10 +57,12 @@ export async function generate() {
 export async function test() {
     const config = await load_config();
     const stories = await get_stories(`http://localhost:${config.port}`);
+    const concurrency =
+        config.concurrency === "auto" ? cpus().length : config.concurrency;
 
     let progress = 0;
     const results = [];
-    const queue = new PQueue({ concurrency: CPU_COUNT });
+    const queue = new PQueue({ concurrency });
     queue.addListener("error", (e) => console.error(e));
     queue.addListener(
         "completed",
