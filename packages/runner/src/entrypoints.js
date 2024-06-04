@@ -3,7 +3,6 @@ import { consola } from "consola";
 import { emptyDirSync } from "fs-extra";
 import PQueue from "p-queue";
 import { get_browsers, get_devices, load_config } from "./config.js";
-import { BROWSERS, DEVICES } from "./constants.js";
 import { connect_to_browser, run_generate, run_tests } from "./engine.js";
 import { get_stories } from "./storybook.js";
 
@@ -58,7 +57,6 @@ export async function generate() {
 export async function test() {
     const config = await load_config();
     const used_browsers = get_browsers(config);
-    console.log(config.browsers, used_browsers);
     const used_devices = get_devices(config);
     const stories = await get_stories(`http://localhost:${config.port}`);
     const concurrency =
