@@ -127,7 +127,7 @@ export async function run_tests() {
         }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${total_tests}`,
     );
 
-    return failed_tests > 0;
+    return failed_tests === 0;
 }
 
 /**
