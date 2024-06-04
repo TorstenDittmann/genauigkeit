@@ -1,133 +1,61 @@
-import { cpus } from "node:os";
-import { consola } from "consola";
-import { emptyDirSync } from "fs-extra";
 import jimp from "jimp";
 import looksSame from "looks-same";
-import PQueue from "p-queue";
 import { chromium, firefox, webkit } from "playwright";
-import { load_config } from "./config.js";
-import { get_stories } from "./storybook.js";
-
-const cpus_count = cpus().length;
-const devices = ["mobile", "desktop"];
 
 /**
+ * @param {Story} story
+ * @param {import('playwright').Browser} browser
+ * @param {import('./config.js').Config} config
+ * @param {"desktop"|"mobile"} device
+ * @param {"chromium"|"firefox"|"webkit"} target_browser
  * @returns {Promise<void>}
  */
-export async function run_generate() {
-    const config = await load_config();
-    emptyDirSync(`${config.directory}/current`);
-    emptyDirSync(`${config.directory}/diffs`);
-    emptyDirSync(`${config.directory}/references`);
-    const [stories, browser] = await Promise.all([
-        get_stories(`http://localhost:${config.port}`),
-        connect_to_browser("chromium"),
-    ]);
-
-    let progress = 0;
-    const queue = new PQueue({ concurrency: cpus_count });
-    queue.addListener("completed", ({ story, device }) => {
-        const progress_current = ++progress;
-        const progress_text = `[${progress_current}/${
-            stories.length * devices.length
-        }]`;
-        consola.success(`${progress_text} ${story.id} (${device})`);
-    });
-    for (const story of stories) {
-        for (const device of devices) {
-            queue.add(async () => {
-                await create_reference(story, browser, config, device).then(
-                    (image) =>
-                        image.write(
-                            `${config.directory}/references/${story.id}-${device}.png`,
-                        ),
-                );
-
-                return { story, device };
-            });
-        }
-    }
-
-    await new Promise((resolve, reject) =>
-        queue.onIdle().then(resolve).catch(reject),
+export async function run_generate(
+    story,
+    browser,
+    config,
+    device,
+    target_browser,
+) {
+    await create_reference(story, browser, config, device).then((image) =>
+        image.write(
+            `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
+        ),
     );
 }
 
 /**
- * @returns {Promise<boolean>}
+ * @param {Story} story
+ * @param {import('playwright').Browser} browser
+ * @param {import('./config.js').Config} config
+ * @param {"desktop"|"mobile"} device
+ * @param {"chromium"|"firefox"|"webkit"} target_browser
+ * @returns {Promise<{story:Story,diff:looksSame.LooksSameWithExistingDiffResult,device:"desktop"|"mobile"}>}
  */
-export async function run_tests() {
-    const config = await load_config();
-    emptyDirSync(`${config.directory}/current`);
-    emptyDirSync(`${config.directory}/diffs`);
-    const [stories, browser] = await Promise.all([
-        get_stories(`http://localhost:${config.port}`),
-        connect_to_browser("chromium"),
-    ]);
+export async function run_tests(
+    story,
+    browser,
+    config,
+    device,
+    target_browser,
+) {
+    const ref = await create_reference(story, browser, config, device);
+    await ref.writeAsync(
+        `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
+    );
 
-    let progress = 0;
-    const results = [];
-    const queue = new PQueue({ concurrency: cpus_count });
-
-    queue.addListener("completed", ({ diff, story, device }) => {
-        const progress_current = ++progress;
-        const progress_text = `[${progress_current}/${
-            stories.length * devices.length
-        }]`;
-        if (!diff.equal) {
-            consola.fail(`${progress_text} diff found for ${story.id}`);
-        } else {
-            consola.success(`${progress_text} ${story.id} (${device})`);
-        }
-        results.push({ story, diff, device });
-    });
-
-    for (const story of stories) {
-        for (const device of ["mobile", "desktop"]) {
-            queue.add(async () => {
-                const ref = await create_reference(
-                    story,
-                    browser,
-                    config,
-                    device,
-                );
-                await ref.writeAsync(
-                    `${config.directory}/current/${story.id}-${device}.png`,
-                );
-
-                const diff = await looksSame(
-                    `${config.directory}/references/${story.id}-${device}.png`,
-                    `${config.directory}/current/${story.id}-${device}.png`,
-                    { strict: true, createDiffImage: true },
-                );
-                if (!diff.equal) {
-                    diff.diffImage.save(
-                        `${config.directory}/diffs/${story.id}-${device}.png`,
-                    );
-                }
-
-                return { story, diff, device };
-            });
-        }
+    const diff = await looksSame(
+        `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
+        `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
+        { strict: true, createDiffImage: true },
+    );
+    if (!diff.equal) {
+        diff.diffImage.save(
+            `${config.directory}/diffs/${target_browser}/${story.id}-${device}.png`,
+        );
     }
 
-    /** @type {{story: Story, diff: looksSame.LooksSameWithExistingDiffResult}[]} */
-    await new Promise((resolve, reject) =>
-        queue.onIdle().then(resolve).catch(reject),
-    );
-
-    await browser.close();
-    const total_tests = stories.length * devices.length;
-    const failed_tests = results.filter(({ diff }) => !diff.equal).length;
-    const passed_tests = total_tests - failed_tests;
-
-    consola.box(
-        `Tests ${
-            failed_tests > 0 ? "failed" : "succesful"
-        }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${total_tests}`,
-    );
-
-    return failed_tests === 0;
+    return { story, diff, device, target_browser };
 }
 
 /**
