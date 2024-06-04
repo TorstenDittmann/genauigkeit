@@ -25,7 +25,7 @@ export async function run_generate() {
         const progress_text = `[${progress_current}/${stories.length}]`;
         consola.success(`${progress_text} ${story.id}`);
     });
-    for (story of stories) {
+    for (const story of stories) {
         queue.add(async () => {
             await create_reference(story, browser).then((image) =>
                 image.write(`${config.directory}/references/${story.id}.png`),
@@ -62,7 +62,7 @@ export async function run_tests() {
         results.push({ story, diff });
     });
 
-    for (story of stories) {
+    for (const story of stories) {
         queue.add(async () => {
             const ref = await create_reference(story, browser);
             await ref.writeAsync(`${config.directory}/current/${story.id}.png`);
