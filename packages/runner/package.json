@@ -8,8 +8,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "node --watch index.js test",
-        "format": "pnpm biome check --apply .",
-        "lint": "pnpm biome lint ."
+        "format": "biome check --apply .",
+        "lint": "biome lint ."
     },
     "keywords": [],
     "author": "",
