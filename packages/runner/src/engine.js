@@ -118,10 +118,10 @@ export async function run_tests() {
     consola.box(
         `Tests ${
             failed_tests > 0 ? "failed" : "succesful"
-        }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${
-            total_tests
-        }`,
+        }!\nFailed: ${failed_tests}\nPassed: ${passed_tests}\nTotal: ${total_tests}`,
     );
+
+    process.exit(failed_tests > 0 ? 1 : 0);
 }
 
 /**
