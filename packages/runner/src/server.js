@@ -19,7 +19,7 @@ export async function start_server() {
             "cd /home/pwuser && npx -y playwright@1.44.1 run-server --port 1337",
         ],
         HostConfig: {
-            ExtraHosts: ["proxy-host:host-gateway"],
+            ExtraHosts: ["genauigkeit-host:host-gateway"],
             IpcMode: "host",
             PortBindings: {
                 "1337/tcp": [

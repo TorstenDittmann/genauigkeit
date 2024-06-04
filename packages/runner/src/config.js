@@ -2,11 +2,11 @@ import { loadConfig } from "c12";
 
 /**
  * @typedef {Object} Config
- * @property {number} storybookPort
+ * @property {number} port
  * @property {string} directory
  */
 const config_defaults = {
-    storybookPort: 6006,
+    port: 6006,
     directory: "./.genauigkeit",
 };
 

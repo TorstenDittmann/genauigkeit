@@ -75,6 +75,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
+      genauigkeit:
+        specifier: ^0.0.4
+        version: 0.0.4(@clerc/core@0.44.0)
       jimp:
         specifier: ^0.22.12
         version: 0.22.12
@@ -2551,6 +2554,10 @@ packages:
 
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
+
+  genauigkeit@0.0.4:
+    resolution: {integrity: sha512-gV6Dg4ryQ2UP27mGN9ZFrlzxvC+TJFOuVyKqKxIV3MY7OXPGuuVYk8tSuH7re2rkezvl784Z3L399LOWwtQfbA==}
+    hasBin: true
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -7376,6 +7383,27 @@ snapshots:
   function-bind@1.1.2: {}
 
   functions-have-names@1.2.3: {}
+
+  genauigkeit@0.0.4(@clerc/core@0.44.0):
+    dependencies:
+      '@clerc/plugin-help': 0.44.0(@clerc/core@0.44.0)
+      '@clerc/plugin-not-found': 0.44.0(@clerc/core@0.44.0)
+      '@clerc/plugin-version': 0.44.0(@clerc/core@0.44.0)
+      c12: 1.10.0
+      clerc: 0.44.0
+      consola: 3.2.3
+      dockerode: 4.0.2
+      fs-extra: 11.2.0
+      jimp: 0.22.12
+      looks-same: 9.0.0
+      p-queue: 8.0.1
+      pixelmatch: 5.3.0
+      playwright: 1.44.1
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@clerc/core'
+      - encoding
+      - supports-color
 
   gensync@1.0.0-beta.2: {}
 

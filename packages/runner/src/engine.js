@@ -15,7 +15,7 @@ export async function run_generate() {
     emptyDirSync(`${config.directory}/current`);
     emptyDirSync(`${config.directory}/diffs`);
     const [stories, browser] = await Promise.all([
-        get_stories(`http://localhost:${config.storybookPort}`),
+        get_stories(`http://localhost:${config.port}`),
         connect_to_browser("chromium"),
     ]);
     let progress = 0;
@@ -27,7 +27,7 @@ export async function run_generate() {
     });
     for (const story of stories) {
         queue.add(async () => {
-            await create_reference(story, browser).then((image) =>
+            await create_reference(story, browser, config).then((image) =>
                 image.write(`${config.directory}/references/${story.id}.png`),
             );
 
@@ -44,8 +44,10 @@ export async function run_tests() {
     const config = await load_config();
     emptyDirSync(`${config.directory}/current`);
     emptyDirSync(`${config.directory}/diffs`);
-    const stories = await get_stories(config.storybookRoot);
-    const browser = await connect_to_browser("chromium");
+    const [stories, browser] = await Promise.all([
+        get_stories(`http://localhost:${config.port}`),
+        connect_to_browser("chromium"),
+    ]);
 
     let progress = 0;
     const results = [];
@@ -64,7 +66,7 @@ export async function run_tests() {
 
     for (const story of stories) {
         queue.add(async () => {
-            const ref = await create_reference(story, browser);
+            const ref = await create_reference(story, browser, config);
             await ref.writeAsync(`${config.directory}/current/${story.id}.png`);
 
             const diff = await looksSame(
@@ -136,7 +138,7 @@ export async function connect_to_browser(
  */
 export async function create_reference(story, browser, config) {
     const page = await browser.newPage();
-    const url = new URL(`http://proxy-host:${port}/iframe.html`);
+    const url = new URL(`http://genauigkeit-host:${config.port}/iframe.html`);
     url.searchParams.set("id", story.id);
     url.searchParams.set("viewMode", "story");
     await page.goto(url.toString());
