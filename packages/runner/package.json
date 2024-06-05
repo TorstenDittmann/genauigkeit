@@ -17,6 +17,7 @@
     "exports": {
         ".": "./index.js"
     },
+    "types": "./index.d.ts",
     "keywords": ["storybook", "screenshot", "visual", "regression", "testing"],
     "author": "Torsten Dittmann",
     "license": "ISC",
