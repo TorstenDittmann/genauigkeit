@@ -1,13 +1,4 @@
 import { consola } from "consola";
-/**
- * @typedef {Object} Story
- * @property {string} type
- * @property {string} id
- * @property {string} name
- * @property {string} title
- * @property {string} importPath
- * @property {string[]} tags
- */
 
 /**
  * @param {string} url_root

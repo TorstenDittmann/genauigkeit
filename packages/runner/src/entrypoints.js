@@ -63,6 +63,16 @@ export async function test() {
         config.concurrency === "auto" ? cpus().length : config.concurrency;
 
     let progress = 0;
+    /**
+     * @typedef {object} Result
+     * @property {Story} story
+     * @property {boolean} equal
+     * @property {Devices} device
+     * @property {Browsers} target_browser
+     */
+    /**
+     * @type {Result[]} results
+     */
     const results = [];
     const queue = new PQueue({ concurrency });
     queue.addListener("error", (e) => console.error(e));

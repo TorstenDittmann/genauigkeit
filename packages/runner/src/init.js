@@ -3,9 +3,7 @@ import path from "node:path";
 import { consola } from "consola";
 import { ensureDirSync } from "fs-extra";
 import { config_defaults } from "./config.js";
-
-const GIT_IGNORE = `current/
-diffs/`;
+import { GIT_IGNORE } from "./constants.js";
 
 export async function init_config() {
     const port = Number.parseInt(

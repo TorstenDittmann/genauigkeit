@@ -16,12 +16,7 @@ export function get_devices(config) {
 }
 
 /**
- * @typedef {Object} Config
- * @property {number} port
- * @property {string} directory
- * @property {"auto"|number} concurrency
- * @property {{chromium:boolean,firefox:boolean,webkit:boolean}} browsers
- * @property {{mobile:boolean,desktop:boolean}} devices
+ * @type {Config} config
  */
 export const config_defaults = {
     port: 6006,
@@ -44,9 +39,12 @@ export const config_defaults = {
 export async function load_config() {
     const { config } = await loadConfig({
         name: "genauigkeit",
-        configFile: "genauigkeit",
         defaultConfig: config_defaults,
     });
+
+    if (config === null) {
+        throw new Error("Could not load configuration.");
+    }
 
     return config;
 }

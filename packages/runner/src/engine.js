@@ -3,11 +3,15 @@ import looksSame from "looks-same";
 import { chromium, firefox, webkit } from "playwright";
 
 /**
+ * @typedef {import('./storybook.js').Story} Story
+ */
+
+/**
  * @param {Story} story
  * @param {import('playwright').Browser} browser
- * @param {import('./config.js').Config} config
- * @param {"desktop"|"mobile"} device
- * @param {"chromium"|"firefox"|"webkit"} target_browser
+ * @param {Config} config
+ * @param {Devices} device
+ * @param {Browsers} target_browser
  * @returns {Promise<void>}
  */
 export async function run_generate(
@@ -27,10 +31,10 @@ export async function run_generate(
 /**
  * @param {Story} story
  * @param {import('playwright').Browser} browser
- * @param {import('./config.js').Config} config
- * @param {"desktop"|"mobile"} device
- * @param {"chromium"|"firefox"|"webkit"} target_browser
- * @returns {Promise<{story:Story,diff:looksSame.LooksSameWithExistingDiffResult,device:"desktop"|"mobile"}>}
+ * @param {Config} config
+ * @param {Devices} device
+ * @param {Browsers} target_browser
+ * @returns {Promise<{ story: Story, equal: boolean, device: Devices, target_browser: Browsers}>}
  */
 export async function run_tests(
     story,
@@ -59,7 +63,7 @@ export async function run_tests(
 }
 
 /**
- * @param {"chromium" | "firefox" | "webkit"} type
+ * @param {Browsers} type
  * @param {string} address
  * @returns {Promise<import('playwright').Browser>}
  */
@@ -88,10 +92,10 @@ export async function connect_to_browser(
 
 /**
  * Take a screenshot of the story
- * @param {import('./storybook').Story} story
+ * @param {Story} story
  * @param {import('playwright').Browser} browser
- * @param {import('./config').Config} config
- * @param {"mobile"|"desktop"} device
+ * @param {Config} config
+ * @param {Devices} device
  * @returns {Promise<import('jimp')>}
  */
 export async function create_reference(story, browser, config, device) {

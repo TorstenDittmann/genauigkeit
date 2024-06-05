@@ -9,8 +9,8 @@
     "description": "Visual Regression Testing for Storybook",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start:dev": "node --watch index.js test",
+        "start": "node index.js",
+        "test": "pnpm start generate && pnpm start test",
         "format": "biome check --apply .",
         "lint": "publint . && biome lint ."
     },
