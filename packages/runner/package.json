@@ -1,7 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "name": "genauigkeit",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "repository": {
         "type": "git",
         "url": "https://github.com/TorstenDittmann/genauigkeit"
