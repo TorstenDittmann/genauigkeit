@@ -12,9 +12,9 @@ const image = `mcr.microsoft.com/playwright:v${version}-jammy`;
  * @param {Docker} docker
  */
 export async function pull_image(image, docker) {
-    return new Promise(async (resolve, reject) => {
-        consola.info(`pulling image ${image}`);
-        const pulling = await docker.pull(image);
+    consola.info(`pulling image ${image}`);
+    const pulling = await docker.pull(image);
+    return new Promise((resolve, reject) => {
         pulling.addListener("data", (buffer) => {
             try {
                 const response = JSON.parse(buffer.toString());
