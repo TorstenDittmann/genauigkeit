@@ -4,6 +4,33 @@ import Docker from "dockerode";
 /** @type {?string} */
 let container_id = null;
 
+const version = "1.44.1";
+const image = `mcr.microsoft.com/playwright:v${version}-jammy`;
+
+/**
+ * @param {string} image
+ * @param {Docker} docker
+ */
+export async function pull_image(image, docker) {
+    return new Promise(async (resolve, reject) => {
+        consola.info(`pulling image ${image}`);
+        const pulling = await docker.pull(image);
+        pulling.addListener("data", (buffer) => {
+            try {
+                const response = JSON.parse(buffer.toString());
+                if (response?.progress) {
+                    consola.info(response.progress);
+                }
+            } catch {}
+        });
+        pulling.addListener("end", () => {
+            consola.success(`pulled image ${image}`);
+            resolve(true);
+        });
+        pulling.addListener("error", reject);
+    });
+}
+
 /**
  * Start a Playwright server in a Docker container
  * @returns {Promise<Docker.Container>}
@@ -12,15 +39,24 @@ export async function start_server() {
     await stop_server();
     consola.start("server starting...");
     const docker = new Docker();
+    const image_available = await docker
+        .getImage(image)
+        .inspect()
+        .then(() => true)
+        .catch(() => false);
+
+    if (!image_available) {
+        await pull_image(image, docker);
+    }
     const container = await docker.createContainer({
         name: "genauigkeit",
-        Image: "mcr.microsoft.com/playwright:v1.44.1-jammy",
+        Image: image,
         Tty: true,
         OpenStdin: true,
         Cmd: [
             "/bin/sh",
             "-c",
-            "cd /home/pwuser && npx -y playwright@1.44.1 run-server --port 1337",
+            `cd /home/pwuser && npx -y playwright@${version} run-server --port 1337`,
         ],
         HostConfig: {
             ExtraHosts: ["genauigkeit-host:host-gateway"],
