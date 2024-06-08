@@ -3,10 +3,6 @@ import looksSame from "looks-same";
 import { chromium, firefox, webkit } from "playwright";
 
 /**
- * @typedef {import('./storybook.js').Story} Story
- */
-
-/**
  * @param {Story} story
  * @param {import('playwright').Browser} browser
  * @param {Config} config
@@ -136,5 +132,7 @@ export async function create_reference(story, browser, config, device) {
  */
 async function crop_image(buffer) {
     const image = await jimp.read(buffer);
-    return image.autocrop();
+    return image.autocrop({
+        leaveBorder: 8,
+    });
 }

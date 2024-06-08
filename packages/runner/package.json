@@ -1,7 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "name": "genauigkeit",
-    "version": "0.0.21",
+    "version": "0.0.22",
     "repository": {
         "type": "git",
         "url": "https://github.com/TorstenDittmann/genauigkeit"
@@ -36,10 +36,6 @@
         "pixelmatch": "^5.3.0",
         "playwright": "^1.44.1",
         "yargs": "^17.7.2"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "1.7.3",
-        "publint": "^0.2.8"
     },
     "bin": {
         "genauigkeit": "./bin/genauigkeit"

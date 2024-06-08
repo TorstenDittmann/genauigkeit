@@ -19,20 +19,44 @@ cli.fail(async (msg, err) => {
     process.exit(1);
 });
 
-cli.command("test", "Run tests.", async () => {
-    await start_server();
-    consola.info("Running tests...");
-    const succesful = await test();
-    await stop_server();
-    process.exit(succesful ? 0 : 1);
-});
+cli.command(
+    "test",
+    "Run tests.",
+    {
+        pattern: {
+            alias: "p",
+            describe: "Regex pattern to filter stories",
+        },
+    },
+    async (args) => {
+        await start_server();
+        consola.info("running tests...");
+        const pattern =
+            args.pattern === undefined ? null : String(args.pattern);
+        const succesful = await test(pattern);
+        await stop_server();
+        process.exit(succesful ? 0 : 1);
+    },
+);
 
-cli.command("generate", "Generate references", async () => {
-    await start_server();
-    consola.info("Generate references...");
-    await generate();
-    await stop_server();
-});
+cli.command(
+    "generate",
+    "Generate references",
+    {
+        pattern: {
+            alias: "p",
+            describe: "Regex pattern to filter stories",
+        },
+    },
+    async (args) => {
+        await start_server();
+        consola.info("generate references...");
+        const pattern =
+            args.pattern === undefined ? null : String(args.pattern);
+        await generate(pattern);
+        await stop_server();
+    },
+);
 
 cli.command("init", "Initialize genauigkeit", async () => {
     await init_config();

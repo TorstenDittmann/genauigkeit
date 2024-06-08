@@ -7,14 +7,15 @@
     "scripts": {
         "test": "pnpm -r --stream test",
         "dev": "pnpm -r --stream start:dev",
-        "format": "pnpm -r --stream format",
-        "lint": "pnpm -r --stream lint"
+        "format": "biome check --write .",
+        "lint": "biome lint ."
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "packageManager": "pnpm@9.1.4",
     "devDependencies": {
+        "@biomejs/biome": "1.8.0",
         "publint": "^0.2.8"
     }
 }

@@ -6,11 +6,18 @@ import { get_browsers, get_devices, load_config } from "./config.js";
 import { connect_to_browser, run_generate, run_tests } from "./engine.js";
 import { get_stories } from "./storybook.js";
 
-export async function generate() {
+/**
+ * @param {?string} pattern Regex pattern to filter stories
+ */
+export async function generate(pattern = null) {
     const config = await load_config();
     const used_browsers = get_browsers(config);
     const used_devices = get_devices(config);
-    const stories = await get_stories(`http://localhost:${config.port}`);
+    const re_pattern = pattern === null ? null : new RegExp(pattern);
+    const stories = await get_stories(
+        `http://localhost:${config.port}`,
+        re_pattern,
+    );
 
     let progress = 0;
     const concurrency =
@@ -54,11 +61,18 @@ export async function generate() {
     }
 }
 
-export async function test() {
+/**
+ * @param {?string} pattern Regex pattern to filter stories
+ */
+export async function test(pattern) {
     const config = await load_config();
     const used_browsers = get_browsers(config);
     const used_devices = get_devices(config);
-    const stories = await get_stories(`http://localhost:${config.port}`);
+    const re_pattern = pattern === null ? null : new RegExp(pattern);
+    const stories = await get_stories(
+        `http://localhost:${config.port}`,
+        re_pattern,
+    );
     const concurrency =
         config.concurrency === "auto" ? cpus().length : config.concurrency;
 
@@ -83,15 +97,8 @@ export async function test() {
             const progress_text = `[${progress_current}/${
                 stories.length * used_devices.length * used_browsers.length
             }]`;
-            if (!equal) {
-                consola.fail(
-                    `${progress_text} diff found for ${story.id} (${target_browser} ${device})`,
-                );
-            } else {
-                consola.success(
-                    `${progress_text} ${story.id} (${target_browser} ${device})`,
-                );
-            }
+            const output = `${progress_text} ${story.id} (${target_browser} ${device})`;
+            equal ? consola.success(output) : consola.fail(output);
             results.push({ story, equal, device, target_browser });
         },
     );
@@ -126,10 +133,21 @@ export async function test() {
     const failed_tests = results.filter(({ equal }) => !equal).length;
     const passed_tests = total_tests - failed_tests;
 
-    let summary = `Tests ${failed_tests > 0 ? "failed" : "succeeded"}!\n`;
-    summary += `Failed: ${failed_tests}\n`;
-    summary += `Passed: ${passed_tests}\n`;
-    summary += `Total: ${total_tests}`;
+    for (const result of results) {
+        if (result.equal) continue;
+        let message = `${result.story.id}\n`;
+        message += `  \`url\`: http://localhost:${config.port}/?path=/story/${result.story.id}\n`;
+        message += `  \`device\`: ${result.device}\n`;
+        message += `  \`browser\`: ${result.target_browser}\n`;
+        message += `  \`source\`: ${result.story.importPath}\n`;
+        message += `  \`diff\`: ${config.directory}/diffs/${result.target_browser}/${result.story.id}-${result.device}.png`;
+        consola.fail(message);
+    }
+
+    let summary = `tests ${failed_tests > 0 ? "failed" : "succeeded"}!\n`;
+    summary += `\`failed\`: ${failed_tests}\n`;
+    summary += `\`passed\`: ${passed_tests}\n`;
+    summary += `\`total\`: ${total_tests}`;
     consola.box(summary);
 
     return failed_tests === 0;
