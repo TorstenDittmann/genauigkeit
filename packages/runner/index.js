@@ -19,35 +19,26 @@ cli.fail(async (msg, err) => {
     process.exit(1);
 });
 
-cli.command(
-    "test",
-    "Run tests.",
-    {
-        pattern: {
-            alias: "p",
-            describe: "Regex pattern to filter stories",
-        },
+const shared_args = {
+    pattern: {
+        alias: "p",
+        describe: "Regex pattern to filter stories",
     },
-    async (args) => {
-        await start_server();
-        consola.info("running tests...");
-        const pattern =
-            args.pattern === undefined ? null : String(args.pattern);
-        const succesful = await test(pattern);
-        await stop_server();
-        process.exit(succesful ? 0 : 1);
-    },
-);
+};
+
+cli.command("test", "Run tests.", { ...shared_args }, async (args) => {
+    await start_server();
+    consola.info("running tests...");
+    const pattern = args.pattern === undefined ? null : String(args.pattern);
+    const succesful = await test(pattern);
+    await stop_server();
+    process.exit(succesful ? 0 : 1);
+});
 
 cli.command(
     "generate",
-    "Generate references",
-    {
-        pattern: {
-            alias: "p",
-            describe: "Regex pattern to filter stories",
-        },
-    },
+    "Generate references.",
+    { ...shared_args },
     async (args) => {
         await start_server();
         consola.info("generate references...");
