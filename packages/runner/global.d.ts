@@ -17,3 +17,10 @@ declare type Story = {
     importPath: string;
     tags: string[];
 };
+
+declare type Result = {
+    story: Story;
+    equal: boolean;
+    device: Devices;
+    target_browser: Browsers;
+};

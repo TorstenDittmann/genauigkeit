@@ -4,6 +4,7 @@ import { emptyDirSync } from "fs-extra";
 import PQueue from "p-queue";
 import { get_browsers, get_devices, load_config } from "./config.js";
 import { connect_to_browser, run_generate, run_tests } from "./engine.js";
+import { create_report } from "./report.js";
 import { get_stories } from "./storybook.js";
 
 /**
@@ -76,19 +77,12 @@ export async function test(pattern) {
     const concurrency =
         config.concurrency === "auto" ? cpus().length : config.concurrency;
 
-    let progress = 0;
-    /**
-     * @typedef {object} Result
-     * @property {Story} story
-     * @property {boolean} equal
-     * @property {Devices} device
-     * @property {Browsers} target_browser
-     */
     /**
      * @type {Result[]} results
      */
     const results = [];
     const queue = new PQueue({ concurrency });
+    let progress = 0;
     queue.addListener("error", (e) => console.error(e));
     queue.addListener(
         "completed",
@@ -127,6 +121,8 @@ export async function test(pattern) {
         );
         await browser.close();
     }
+
+    await create_report(results, config);
 
     const total_tests =
         stories.length * used_devices.length * used_browsers.length;

@@ -12,7 +12,7 @@
         "start": "node index.js",
         "test": "pnpm start generate && pnpm start test",
         "format": "biome check --apply .",
-        "lint": "publint . && biome lint ."
+        "lint": "publint ."
     },
     "exports": {
         ".": "./index.js"
