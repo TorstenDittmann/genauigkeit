@@ -80,7 +80,7 @@ export async function connect_to_browser(
             }
         } catch (error) {
             tries += 1;
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
     }
     throw new Error("Could not connect to browser");
