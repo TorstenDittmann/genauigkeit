@@ -6,16 +6,18 @@ export default defineConfig({
     title: "genauigkeit",
     description: "Visual Regression Testing for Storybook",
     icon: "/rspress-icon.png",
-    logo: {
-        light: "/rspress-light-logo.png",
-        dark: "/rspress-dark-logo.png",
-    },
+    logoText: "genauigkeit.dev",
     themeConfig: {
         socialLinks: [
             {
                 icon: "github",
                 mode: "link",
-                content: "https://github.com/web-infra-dev/rspress",
+                content: "https://github.com/TorstenDittmann/genauigkeit",
+            },
+            {
+                icon: "twitter",
+                mode: "link",
+                content: "https://x.com/DittmannTorsten",
             },
         ],
     },

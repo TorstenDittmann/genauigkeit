@@ -22,7 +22,7 @@ export async function init_config() {
     console.log();
     consola.info("Initializing genauigkeit");
 
-    const config_path = path.join("./genauigkeit.json");
+    const config_path = path.join("./genauigkeit.config.json");
     await writeFile(
         config_path,
         JSON.stringify({ ...config_defaults, port, directory }, undefined, 4),

@@ -16,13 +16,14 @@
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^1.5.0",
-        "@storybook/addon-essentials": "^8.1.5",
-        "@storybook/addon-links": "^8.1.5",
-        "@storybook/blocks": "^8.1.5",
-        "@storybook/test": "^8.1.5",
-        "@storybook/web-components": "^8.1.5",
-        "@storybook/web-components-vite": "^8.1.5",
-        "storybook": "^8.1.5",
+        "@storybook/addon-essentials": "^8.1.6",
+        "@storybook/addon-links": "^8.1.6",
+        "@storybook/blocks": "^8.1.6",
+        "@storybook/test": "^8.1.6",
+        "@storybook/web-components": "^8.1.6",
+        "@storybook/web-components-vite": "^8.1.6",
+        "genauigkeit": "workspace:*",
+        "storybook": "^8.1.6",
         "typescript": "^5.2.2",
         "vite": "^5.2.0"
     }
