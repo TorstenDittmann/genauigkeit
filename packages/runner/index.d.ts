@@ -1,3 +1,3 @@
-import type { Config as InternalConfig } from "./global";
+import type { Config as InternalConfig } from "./global.d.ts";
 
 export type Config = Partial<InternalConfig>;
