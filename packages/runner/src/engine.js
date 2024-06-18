@@ -1,4 +1,5 @@
 import jimp from "jimp";
+import sharp from "sharp";
 import looksSame from "looks-same";
 import { chromium, firefox, webkit } from "playwright";
 
@@ -40,7 +41,7 @@ export async function run_tests(
     target_browser,
 ) {
     const ref = await create_reference(story, browser, config, device);
-    await ref.writeAsync(
+    await ref.toFile(
         `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
     );
 
@@ -92,7 +93,7 @@ export async function connect_to_browser(
  * @param {import('playwright').Browser} browser
  * @param {Config} config
  * @param {Devices} device
- * @returns {Promise<import('jimp')>}
+ * @returns {Promise<sharp.Sharp>}
  */
 export async function create_reference(story, browser, config, device) {
     const page = await browser.newPage(
@@ -128,11 +129,8 @@ export async function create_reference(story, browser, config, device) {
 
 /**
  * @param {Buffer} buffer
- * @returns {Promise<import('jimp')>}
+ * @returns {Promise<sharp.Sharp>}
  */
 async function crop_image(buffer) {
-    const image = await jimp.read(buffer);
-    return image.autocrop({
-        leaveBorder: 8,
-    });
+    return sharp(buffer).trim();
 }
