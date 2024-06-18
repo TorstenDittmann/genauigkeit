@@ -20,6 +20,7 @@ export function get_devices(config) {
  */
 export const config_defaults = {
     port: 6006,
+    strict: false,
     directory: "./.genauigkeit",
     concurrency: "auto",
     browsers: {

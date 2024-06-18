@@ -47,7 +47,7 @@ export async function run_tests(
     const diff = await looksSame(
         `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
         `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
-        { strict: true, createDiffImage: true },
+        { strict: config.strict, createDiffImage: true },
     );
     if (!diff.equal) {
         diff.diffImage.save(
@@ -99,7 +99,7 @@ export async function create_reference(story, browser, config, device) {
         device === "mobile"
             ? {
                   deviceScaleFactor: 2,
-                  viewport: { width: 360, height: 800 },
+                  viewport: { width: 480, height: 920 },
               }
             : {
                   viewport: { width: 1920, height: 1080 },

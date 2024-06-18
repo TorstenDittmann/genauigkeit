@@ -4,6 +4,7 @@ declare type Devices = "mobile" | "desktop";
 declare type Config = {
     port: number;
     directory: string;
+    strict: boolean;
     concurrency: "auto" | number;
     browsers: Record<Browsers, boolean>;
     devices: Record<Devices, boolean>;
