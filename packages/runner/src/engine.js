@@ -18,7 +18,7 @@ export async function run_generate(
     target_browser,
 ) {
     await create_reference(story, browser, config, device).then((image) =>
-        image.write(
+        image.toFile(
             `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
         ),
     );
