@@ -1,7 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "name": "genauigkeit",
-    "version": "0.0.26",
+    "version": "0.0.27",
     "repository": {
         "type": "git",
         "url": "https://github.com/TorstenDittmann/genauigkeit"
@@ -18,13 +18,7 @@
         ".": "./index.js"
     },
     "types": "./index.d.ts",
-    "keywords": [
-        "storybook",
-        "screenshot",
-        "visual",
-        "regression",
-        "testing"
-    ],
+    "keywords": ["storybook", "screenshot", "visual", "regression", "testing"],
     "author": "Torsten Dittmann",
     "license": "ISC",
     "dependencies": {

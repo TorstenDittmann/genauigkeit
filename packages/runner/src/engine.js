@@ -1,7 +1,6 @@
-import jimp from "jimp";
-import sharp from "sharp";
 import looksSame from "looks-same";
 import { chromium, firefox, webkit } from "playwright";
+import sharp from "sharp";
 
 /**
  * @param {Story} story
