@@ -8,7 +8,7 @@
 
 -   **Fast:** Concurrent testing significantly reduces test execution time.
 -   **Local:** Run tests locally without the need for a cloud service.
--   **Reliable:** Docker containers provide a consistent isolated environment for screenshot generation, eliminating environmental discrepancies.
+-   **Reliable:** Docker containers provide a consistent isolated conditions for screenshots, eliminating environmental discrepancies.
 -   **Easy to Use:** Integrate genauigkeit seamlessly into your existing Storybook workflow.
 
 ## Requirements
