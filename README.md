@@ -35,7 +35,7 @@ npx genauigkeit init
 To generate reference screenshots, execute the following command:
 
 ```sh
-npx genauigkeit reference
+npx genauigkeit generate
 ```
 
 ### Run Tests
