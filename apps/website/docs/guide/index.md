@@ -1,4 +1,4 @@
-# What is _genauigkeit_?
+# What is genauigkeit?
 
 **genauigkeit** (German for "accuracy") is a library that simplifies visual regression testing for your components in Storybook. It leverages the power of concurrency and Docker containers to ensure fast and reliable tests.
 

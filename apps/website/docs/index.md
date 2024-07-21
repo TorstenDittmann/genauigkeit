@@ -12,7 +12,7 @@ hero:
       text: Github
       link: https://github.com/TorstenDittmann/genauigkeit
   image:
-    src: /rspress-icon.png
+    src: /logo.png
     alt: genauigkeit Logo
 features:
   - title: Blazing fast

@@ -5,7 +5,7 @@ export default defineConfig({
     root: path.join(__dirname, "docs"),
     title: "genauigkeit",
     description: "Visual Regression Testing for Storybook",
-    icon: "/rspress-icon.png",
+    icon: "/logo.png",
     logoText: "genauigkeit.dev",
     themeConfig: {
         socialLinks: [
