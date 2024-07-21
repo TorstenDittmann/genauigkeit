@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import looksSame from "looks-same";
 import { chromium, firefox, webkit } from "playwright";
 import sharp from "sharp";
@@ -30,7 +31,7 @@ export async function run_generate(
  * @param {Config} config
  * @param {Devices} device
  * @param {Browsers} target_browser
- * @returns {Promise<{ story: Story, equal: boolean, device: Devices, target_browser: Browsers}>}
+ * @returns {Promise<{ story: Story, equal: boolean, device: Devices, target_browser: Browsers, images: {current: Buffer, reference: Buffer, difference?: Buffer}}>}
  */
 export async function run_tests(
     story,
@@ -39,23 +40,37 @@ export async function run_tests(
     device,
     target_browser,
 ) {
-    const ref = await create_reference(story, browser, config, device);
-    await ref.toFile(
+    const current = await create_reference(story, browser, config, device);
+    await current.toFile(
         `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
     );
-
+    const reference = await readFile(
+        `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
+    );
     const diff = await looksSame(
         `${config.directory}/references/${target_browser}/${story.id}-${device}.png`,
         `${config.directory}/current/${target_browser}/${story.id}-${device}.png`,
         { strict: config.strict, createDiffImage: true },
     );
+
     if (!diff.equal) {
+        if (!diff.diffImage) throw new Error("Diff image was not created");
         diff.diffImage.save(
             `${config.directory}/diffs/${target_browser}/${story.id}-${device}.png`,
         );
     }
 
-    return { story, equal: diff.equal, device, target_browser };
+    return {
+        story,
+        equal: diff.equal,
+        device,
+        target_browser,
+        images: {
+            current: await current.toBuffer(),
+            reference,
+            difference: await diff.diffImage?.createBuffer("png"),
+        },
+    };
 }
 
 /**

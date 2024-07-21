@@ -86,14 +86,14 @@ export async function test(pattern) {
     queue.addListener("error", (e) => console.error(e));
     queue.addListener(
         "completed",
-        ({ equal, story, device, target_browser }) => {
+        ({ equal, story, device, target_browser, images }) => {
             const progress_current = ++progress;
             const progress_text = `[${progress_current}/${
                 stories.length * used_devices.length * used_browsers.length
             }]`;
             const output = `${progress_text} ${story.id} (${target_browser} ${device})`;
             equal ? consola.success(output) : consola.fail(output);
-            results.push({ story, equal, device, target_browser });
+            results.push({ story, equal, device, target_browser, images });
         },
     );
 
@@ -126,8 +126,9 @@ export async function test(pattern) {
 
     const total_tests =
         stories.length * used_devices.length * used_browsers.length;
-    const failed_tests = results.filter(({ equal }) => !equal).length;
-    const passed_tests = total_tests - failed_tests;
+    const failed_tests = results.filter(({ equal }) => !equal);
+    const total_failed_tests = failed_tests.length;
+    const total_passed_tests = total_tests - total_failed_tests;
 
     for (const result of results) {
         if (result.equal) continue;
@@ -140,11 +141,19 @@ export async function test(pattern) {
         consola.fail(message);
     }
 
-    let summary = `tests ${failed_tests > 0 ? "failed" : "succeeded"}!\n`;
-    summary += `\`failed\`: ${failed_tests}\n`;
-    summary += `\`passed\`: ${passed_tests}\n`;
+    let summary = `tests ${total_passed_tests > 0 ? "failed" : "succeeded"}!\n`;
+    summary += `\`failed\`: ${total_failed_tests}\n`;
+    summary += `\`passed\`: ${total_passed_tests}\n`;
     summary += `\`total\`: ${total_tests}`;
     consola.box(summary);
 
-    return failed_tests === 0;
+    if (total_failed_tests > 0) {
+        const regex = Array.from(
+            new Set(failed_tests.map((t) => t.story.id)),
+        ).join("|");
+        consola.log(
+            `To approve these changes run: \`npx genauigkeit test -p ${regex}\``,
+        );
+    }
+    return total_failed_tests === 0;
 }

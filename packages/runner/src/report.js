@@ -36,8 +36,11 @@ export async function create_report(results, config) {
     for (const [id, summary] of Object.entries(results_grouped)) {
         body += `<details><summary>${summary.success ? "✅" : "❌"} ${id}</summary>`;
         body += `<table><thead><tr><th scope="col" width="24">ℹ️</th><th scope="col">Device</th><th scope="col">Browser</th></tr></thead><tbody>`;
-        for (const result of summary.results)
+        for (const result of summary.results) {
             body += `<tr><td>${result.equal ? "✅" : "❌"}</td><td>${result.device}</td><td>${result.target_browser}</td></tr>`;
+            if (!result.equal)
+                body += `<tr><td colspan="3"><img src="data:image/png;base64,${result.images.difference.toString("base64")}" /></td></tr>`;
+        }
         body += "</tbody></table>";
         body += "</details>";
     }

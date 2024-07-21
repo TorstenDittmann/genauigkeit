@@ -24,4 +24,9 @@ declare type Result = {
     equal: boolean;
     device: Devices;
     target_browser: Browsers;
+    images: {
+        current: Buffer;
+        difference: Buffer;
+        reference: Buffer;
+    };
 };

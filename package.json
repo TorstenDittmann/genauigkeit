@@ -7,7 +7,7 @@
     "scripts": {
         "test": "pnpm -r --stream test",
         "build": "pnpm -r --stream build",
-        "dev": "pnpm -r --stream start:dev",
+        "dev": "pnpm -r --stream --parallel start:dev",
         "format": "biome check --write .",
         "lint": "biome lint ."
     },
