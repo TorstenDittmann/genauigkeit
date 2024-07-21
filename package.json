@@ -17,6 +17,6 @@
     "packageManager": "pnpm@9.1.4",
     "devDependencies": {
         "@biomejs/biome": "1.8.0",
-        "publint": "^0.2.8"
+        "publint": "^0.2.9"
     }
 }

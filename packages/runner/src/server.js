@@ -4,8 +4,8 @@ import Docker from "dockerode";
 /** @type {?string} */
 let container_id = null;
 
-const version = "1.44.1";
-const image = `mcr.microsoft.com/playwright:v${version}-jammy`;
+const version = "1.45.2";
+const image = `mcr.microsoft.com/playwright:v${version}`;
 
 /**
  * @param {string} docker_image
