@@ -63,7 +63,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^16
-        version: 16.18.98
+        version: 16.18.103
 
   packages/runner:
     dependencies:
@@ -1715,9 +1715,6 @@ packages:
   '@types/node@16.18.103':
     resolution: {integrity: sha512-gOAcUSik1nR/CRC3BsK8kr6tbmNIOTpvb1sT+v5Nmmys+Ho8YtnIHP90wEsVK4hTcHndOqPVIlehEGEA5y31bA==}
 
-  '@types/node@16.18.98':
-    resolution: {integrity: sha512-fpiC20NvLpTLAzo3oVBKIqBGR6Fx/8oAK/SSf7G+fydnXMY1x4x9RZ6sBXhqKlCU21g2QapUsbLlhv3+a7wS+Q==}
-
   '@types/node@18.19.34':
     resolution: {integrity: sha512-eXF4pfBNV5DAMKGbI02NnDtWrQ40hAN558/2vvS4gMpMIxaf6JmD7YjnZbq0Q9TDSSkKBamime8ewRoomHdt4g==}
 
@@ -1844,11 +1841,6 @@ packages:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
-
-  acorn@8.11.3:
-    resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
 
   acorn@8.12.1:
     resolution: {integrity: sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==}
@@ -2027,9 +2019,6 @@ packages:
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
     engines: {node: '>= 0.4'}
-
-  caniuse-lite@1.0.30001629:
-    resolution: {integrity: sha512-c3dl911slnQhmxUIT4HhYzT7wnBK/XYpGnYLOj4nJBaRiw52Ibe7YxlDaAeRECvA786zCuExhxIUJ2K7nHMrBw==}
 
   caniuse-lite@1.0.30001642:
     resolution: {integrity: sha512-3XQ0DoRgLijXJErLSl+bLnJ+Et4KqV1PY6JJBGAFlsNsz31zeAIncyeZfLCabHK/jtSh+671RM9YMldxjUPZtA==}
@@ -5885,7 +5874,7 @@ snapshots:
   '@modern-js/utils@2.51.0':
     dependencies:
       '@swc/helpers': 0.5.3
-      caniuse-lite: 1.0.30001629
+      caniuse-lite: 1.0.30001642
       lodash: 4.17.21
       rslog: 1.2.2
 
@@ -6004,7 +5993,7 @@ snapshots:
   '@rsbuild/shared@0.7.3(@swc/helpers@0.5.3)':
     dependencies:
       '@rspack/core': 0.7.1(@swc/helpers@0.5.3)
-      caniuse-lite: 1.0.30001629
+      caniuse-lite: 1.0.30001642
       html-webpack-plugin: html-rspack-plugin@5.7.2(@rspack/core@0.7.1(@swc/helpers@0.5.3))
       postcss: 8.4.38
     optionalDependencies:
@@ -6055,7 +6044,7 @@ snapshots:
     dependencies:
       '@module-federation/runtime-tools': 0.1.6
       '@rspack/binding': 0.7.1
-      caniuse-lite: 1.0.30001629
+      caniuse-lite: 1.0.30001642
       tapable: 2.2.1
       webpack-sources: 3.2.3
     optionalDependencies:
@@ -6595,8 +6584,6 @@ snapshots:
 
   '@types/node@16.18.103': {}
 
-  '@types/node@16.18.98': {}
-
   '@types/node@18.19.34':
     dependencies:
       undici-types: 5.26.5
@@ -6755,11 +6742,9 @@ snapshots:
     dependencies:
       acorn: 8.12.1
 
-  acorn-jsx@5.3.2(acorn@8.11.3):
+  acorn-jsx@5.3.2(acorn@8.12.1):
     dependencies:
-      acorn: 8.11.3
-
-  acorn@8.11.3: {}
+      acorn: 8.12.1
 
   acorn@8.12.1: {}
 
@@ -6971,8 +6956,6 @@ snapshots:
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
       set-function-length: 1.2.2
-
-  caniuse-lite@1.0.30001629: {}
 
   caniuse-lite@1.0.30001642: {}
 
@@ -8494,8 +8477,8 @@ snapshots:
 
   micromark-extension-mdxjs@1.0.1:
     dependencies:
-      acorn: 8.11.3
-      acorn-jsx: 5.3.2(acorn@8.11.3)
+      acorn: 8.12.1
+      acorn-jsx: 5.3.2(acorn@8.12.1)
       micromark-extension-mdx-expression: 1.0.8
       micromark-extension-mdx-jsx: 1.0.5
       micromark-extension-mdx-md: 1.0.1
@@ -8687,7 +8670,7 @@ snapshots:
 
   mlly@1.7.1:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
       pathe: 1.1.2
       pkg-types: 1.1.1
       ufo: 1.5.3
