@@ -45,10 +45,16 @@ export async function pull_image(image, docker) {
 
 /**
  * Start a Playwright server in a Docker container
- * @returns {Promise<Docker.Container>}
+ * @returns {Promise<void>}
  */
 export async function start_server() {
-    await stop_server();
+    const running = await is_server_running();
+    if (running) {
+        consola.info("server already running");
+        container_id = running.Id;
+        await restart_server();
+        return;
+    }
     consola.start("server starting...");
     const docker = new Docker();
 
@@ -89,8 +95,6 @@ export async function start_server() {
     consola.success("server started!");
 
     container_id = container.id;
-
-    return container;
 }
 
 export async function restart_server() {
@@ -118,4 +122,16 @@ export async function stop_server() {
         await container.remove().catch(() => null);
         consola.ready("server stopped");
     }
+}
+
+async function is_server_running() {
+    const docker = new Docker();
+    const containers = await docker.listContainers({
+        all: true,
+        filters: {
+            label: ["genauigkeit=true"],
+        },
+    });
+
+    return containers[0] ?? null;
 }

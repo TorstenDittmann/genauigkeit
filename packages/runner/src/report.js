@@ -38,8 +38,11 @@ export async function create_report(results, config) {
         body += `<table><thead><tr><th scope="col" width="24">ℹ️</th><th scope="col">Device</th><th scope="col">Browser</th></tr></thead><tbody>`;
         for (const result of summary.results) {
             body += `<tr><td>${result.equal ? "✅" : "❌"}</td><td>${result.device}</td><td>${result.target_browser}</td></tr>`;
-            if (!result.equal)
-                body += `<tr><td colspan="3"><img src="data:image/png;base64,${result.images.difference.toString("base64")}" /></td></tr>`;
+            if (!result.equal) {
+                body += `<tr><td colspan="3"><p>Reference</p><img src="${create_base64_image_from_buffer(result.images.reference)}" /></td></tr>`;
+                body += `<td colspan="3"><p>Current</p><img src="${create_base64_image_from_buffer(result.images.current)}" /></td></tr>`;
+                body += `<td colspan="3"><p>Diff</p><img src="${create_base64_image_from_buffer(result.images.difference)}" /></td></tr>`;
+            }
         }
         body += "</tbody></table>";
         body += "</details>";
@@ -48,6 +51,14 @@ export async function create_report(results, config) {
     consola.success(
         `report written to ${join(config.directory, "report", "index.html")}`,
     );
+}
+
+/**
+ * @param {Buffer} buffer
+ * @returns {string}
+ */
+function create_base64_image_from_buffer(buffer) {
+    return `data:image/png;base64,${buffer.toString("base64")}`;
 }
 
 /**
