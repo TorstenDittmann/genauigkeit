@@ -9,7 +9,9 @@
         "build": "pnpm -r --stream build",
         "dev": "pnpm -r --stream --parallel start:dev",
         "format": "biome check --write .",
-        "lint": "biome lint ."
+        "lint": "pnpm run '/^lint:.*/'",
+        "lint:formatting": "biome check .",
+        "lint:repo": "pnpm -r --stream --parallel lint"
     },
     "keywords": [],
     "author": "",
