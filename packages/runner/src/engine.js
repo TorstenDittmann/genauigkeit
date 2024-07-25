@@ -146,5 +146,8 @@ export async function create_reference(story, browser, config, device) {
  * @returns {Promise<sharp.Sharp>}
  */
 async function crop_image(buffer) {
-    return sharp(buffer).trim();
+    return sharp(buffer).trim({
+        lineArt: true,
+        threshold: 0,
+    });
 }
