@@ -148,6 +148,6 @@ export async function create_reference(story, browser, config, device) {
 async function crop_image(buffer) {
     return sharp(buffer).trim({
         lineArt: true,
-        threshold: 0
+        threshold: 0,
     });
 }
