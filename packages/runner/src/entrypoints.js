@@ -152,7 +152,7 @@ export async function test(pattern) {
             new Set(failed_tests.map((t) => t.story.id)),
         ).join("|");
         consola.log(
-            `To approve these changes run: \`npx genauigkeit test -p ${regex}\``,
+            `To approve these changes run: \`npx genauigkeit generate -p "${regex}"\``,
         );
     }
     return total_failed_tests === 0;

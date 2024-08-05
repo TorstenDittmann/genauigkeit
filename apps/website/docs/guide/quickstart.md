@@ -31,7 +31,7 @@ To create references or run tests, storybook needs to be running and accessible.
 To generate reference screenshots, execute the following command:
 
 ```sh
-npx genauigkeit reference
+npx genauigkeit generate
 ```
 
 ## Run Tests
