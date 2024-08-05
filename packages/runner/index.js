@@ -31,7 +31,6 @@ cli.command("test", "Run tests.", { ...shared_args }, async (args) => {
     consola.info("running tests...");
     const pattern = args.pattern === undefined ? null : String(args.pattern);
     const succesful = await test(pattern);
-    await stop_server();
     process.exit(succesful ? 0 : 1);
 });
 
@@ -45,7 +44,6 @@ cli.command(
         const pattern =
             args.pattern === undefined ? null : String(args.pattern);
         await generate(pattern);
-        await stop_server();
     },
 );
 

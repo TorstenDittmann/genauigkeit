@@ -22,14 +22,18 @@ export async function init_config() {
     console.log();
     consola.info("Initializing genauigkeit");
 
-    const config_path = path.join("./genauigkeit.config.json");
-    await writeFile(
-        config_path,
-        JSON.stringify({ ...config_defaults, port, directory }, undefined, 4),
-        {
-            encoding: "utf-8",
-        },
+    const config_path = path.join("./genauigkeit.config.js");
+    let config = "/** @type {import('genauigkeit').Config} */";
+    config += "\nexport default ";
+    config += JSON.stringify(
+        { ...config_defaults, port, directory },
+        undefined,
+        4,
     );
+
+    await writeFile(config_path, config, {
+        encoding: "utf-8",
+    });
     consola.success(`${config_path} created.`);
 
     const gi_path = path.join(directory, ".gitignore");
