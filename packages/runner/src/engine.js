@@ -115,9 +115,11 @@ export async function create_reference(story, browser, config, device) {
             ? {
                   deviceScaleFactor: 2,
                   viewport: { width: 480, height: 920 },
+                  reducedMotion: "reduce",
               }
             : {
                   viewport: { width: 1920, height: 1080 },
+                  reducedMotion: "reduce",
               },
     );
     const url = new URL(`http://genauigkeit-host:${config.port}/iframe.html`);
