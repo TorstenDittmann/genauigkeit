@@ -141,7 +141,7 @@ export async function test(pattern) {
         consola.fail(message);
     }
 
-    let summary = `tests ${total_passed_tests > 0 ? "failed" : "succeeded"}!\n`;
+    let summary = `tests ${total_failed_tests > 0 ? "failed" : "succeeded"}!\n`;
     summary += `\`failed\`: ${total_failed_tests}\n`;
     summary += `\`passed\`: ${total_passed_tests}\n`;
     summary += `\`total\`: ${total_tests}`;
